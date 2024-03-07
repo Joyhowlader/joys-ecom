@@ -1,0 +1,136 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block title %} Product details {% endblock title %}
+
+
+{% block content %}
+
+    <!-- Product Page Section Beign -->
+    <section class="product-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="product-slider owl-carousel">
+                        <div style="width: 80%;" class="product-img">
+                            <figure>
+                                <img style="height: 380px;" src="{{product.thumbnail}}" alt="">
+                                <!-- <div class="p-status">new</div> -->
+                            </figure>
+                        </div>
+                        <div style="width: 80%;" class="product-img">
+                            <figure>
+                                <img style="height: 380px;" src="{{product.thumbnail2}}" alt="">
+                                <!-- <div class="p-status">new</div> -->
+                            </figure>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="col-lg-6">
+                    <div class="product-content">
+                        <h2>{{product.title}}</h2>
+                        <div class="pc-meta">
+                            <h5>$ {{product.price}}</h5>
+                            <div class="rating">
+                                {% if product.in_stock %}
+                                <div class="p-status">
+                                    In Stock
+                                </div>
+                                {% else %}
+                                <div class="p-status">
+                                    Out of Stock
+                                </div>
+                                {% endif %}
+                                <!-- <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i> -->
+                            </div>
+                        </div>
+                        <p>{{product.description}}</p>
+                        <!-- Product size handle from here -->
+                        <!-- {% if product.size_variant.count %}
+                        <div class="form-group col-md">
+                            <label>Select size</label>
+                            <div class="mt-1">
+                                {% for size in product.size_variant.all %}
+                                <label>
+                                    <input id="size" type="radio" onchange="get_correct_price('{{size.size_name}}')" name="select_size"><div class="custom-control-label">{{size.size_name}}</div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %} -->
+                        <!-- Product size handle end from here -->
+                        <ul class="tags">
+                            <li><span>Category :</span> {{product.category.title}}</li>
+                            <!-- <li><span>Tags :</span> man, shirt, dotted, elegant, cool</li> -->
+                        </ul>
+                        {% if product.in_stock %}
+                        <form action="{% url 'add-to-cart' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <!-- {% if product.category.slug == 'kids-clothing' or product.category.slug == 'mens-clothing' or product.category.slug == 'womens-clothing' %}
+                            <h5>Size :</h5>
+                            <hr>    
+                            <fieldset>
+                                <label ><input id="size" type="radio" name="size" class="inline" value="S"/> S</label>
+                                <label ><input id="size" type="radio" name="size" class="inline" value="L"/> L</label>
+                                <label ><input id="size" type="radio" name="size" class="inline" value="XL"/> XL</label>
+                                <label ><input id="size" type="radio" name="size" class="inline" value="XXL"/> XXL</label>
+                            </fieldset>
+                            <hr>
+                            {% endif %} -->
+                            
+                            <button style="cursor: pointer;" type="submit" class="primary-btn pc-btn">Add to cart</button>
+                        </form>
+                        {% endif %}
+                        <!-- <ul class="p-info">
+                            <li>Product Information</li>
+                            <li>Reviews</li>
+                            <li>Product Care</li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Product Page Section End -->
+
+    <!-- Related Product Section Begin -->
+    <section class="related-product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="section-title">
+                        <h2>Related Products</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for related_product in related_products %}
+                <div class="col-lg-3 col-sm-6">
+                    <div class="single-product-item">
+                        <figure>
+                            <a href="{% url 'product-details' related_product.slug %}"><img src="{{related_product.thumbnail}}" style="height: 180px;" alt=""></a>
+                            <!-- <div class="p-status">new</div> -->
+                        </figure>
+                        <div class="product-text">
+                            <a href="{% url 'product-details' related_product.slug %}"><h6>{{related_product.title}}</h6>
+                            </a>
+                            <p>$ {{related_product.price}}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function get_correct_price(size){
+            window.location.href = window.location.pathname + `?size=${size}`
+        }
+    </script>
+
+{% endblock content %}
